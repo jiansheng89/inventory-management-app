@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Grid, IconButton } from "@material-ui/core";
 // components
 import PageTitle from "../../components/PageTitle/PageTitle";
-import Widget from "../../components/Widget/Widget";
+import InsertWidget from "../../components/Widget/InsertWidget";
 
 import {
   Table,
@@ -49,8 +49,6 @@ const Sales = () => {
 
   // CRUDfunctions
   const addSale = async sale => {
-
-    sale.id = sales.length + 1 + Math.floor(Math.random() * 100);
     setSales([...sales, sale]);
     await SalesService.create(sale);
   }
@@ -113,7 +111,7 @@ const Sales = () => {
       <PageTitle title="Sales" />
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <Widget title="" upperTitle noBodyPadding insertNew={handleClickInsertOpen}>
+          <InsertWidget title="" upperTitle noBodyPadding insertNew={handleClickInsertOpen}>
             <Table className="mb-0">
               <TableHead>
                 <TableRow>
@@ -174,7 +172,7 @@ const Sales = () => {
               </TableBody>
             </Table>
 
-          </Widget>
+          </InsertWidget>
         </Grid>
       </Grid>
 

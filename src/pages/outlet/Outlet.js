@@ -1,56 +1,246 @@
-import React from "react";
-import { Grid } from "@material-ui/core";
-import MUIDataTable from "mui-datatables";
-
+import React, { useState, useEffect } from "react";
+import { Grid, IconButton } from "@material-ui/core";
 // components
 import PageTitle from "../../components/PageTitle/PageTitle";
-import Widget from "../../components/Widget/Widget";
-import Table from "../dashboard/components/Table/Table";
+import InsertWidget from "../../components/Widget/InsertWidget";
 
-// data
-import mock from "../dashboard/mock";
+import {
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@material-ui/core";
 
-const datatableData = [
-  ["Joe James", "Example Inc.", "Yonkers", "NY"],
-  ["John Walsh", "Example Inc.", "Hartford", "CT"],
-  ["Bob Herm", "Example Inc.", "Tampa", "FL"],
-  ["James Houston", "Example Inc.", "Dallas", "TX"],
-  ["Prabhakar Linwood", "Example Inc.", "Hartford", "CT"],
-  ["Kaui Ignace", "Example Inc.", "Yonkers", "NY"],
-  ["Esperanza Susanne", "Example Inc.", "Hartford", "CT"],
-  ["Christian Birgitte", "Example Inc.", "Tampa", "FL"],
-  ["Meral Elias", "Example Inc.", "Hartford", "CT"],
-  ["Deep Pau", "Example Inc.", "Yonkers", "NY"],
-  ["Sebastiana Hani", "Example Inc.", "Dallas", "TX"],
-  ["Marciano Oihana", "Example Inc.", "Yonkers", "NY"],
-  ["Brigid Ankur", "Example Inc.", "Dallas", "TX"],
-  ["Anna Siranush", "Example Inc.", "Yonkers", "NY"],
-  ["Avram Sylva", "Example Inc.", "Hartford", "CT"],
-  ["Serafima Babatunde", "Example Inc.", "Tampa", "FL"],
-  ["Gaston Festus", "Example Inc.", "Tampa", "FL"],
-];
+import {
+  Edit as EditIcon,
+  HighlightOff as DeleteIcon,
+} from "@material-ui/icons";
 
-export default function Tables() {
+// components
+import { Button } from "../../components/Wrappers";
+
+import OutletService from '../../services/Outlet'
+
+const Outlet = () => {
+  //state
+  const outletData = [];
+  const [outlets, setOutlet] = useState(outletData);
+  const [insert, setInsert] = useState(false);
+  const [insertOutlet, setInsertOutlet] = useState({});
+  const [edit, setEdit] = useState(false);
+  const [editOutlet, setEditOutlet] = useState({});
+
+  //Initialized
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await OutletService.retrieveAll();
+      console.log(result)
+      setOutlet(result.data);
+    };
+
+    fetchData();
+  }, []);
+
+
+  // CRUDfunctions
+  const addOutlet = async outlet => {
+    let result = await OutletService.create(outlet);
+    console.log(result)
+    setOutlet([...outlets, result.data]); //to include _id
+  }
+
+  const deleteOutlet = async id => {
+    // setEditing(false)
+    setOutlet(outlets.filter(outlet => outlet._id !== id));
+    await OutletService.delete(id);
+  }
+
+  const updateOutlet = async (id, updatedOutlet) => {
+    setOutlet(outlets.map(outlet => (outlet._id === id ? updatedOutlet : outlet)))
+    await OutletService.update(id, updatedOutlet);
+  }
+
+
+  //Event handler
+  const handleClickInsertOpen = () => {
+    setInsert(true);
+  };
+
+  const handleInsertClose = () => {
+    setInsert(false);
+    addOutlet(insertOutlet)
+  };
+
+  const handleInsertCancel = () => {
+    setInsert(false);
+  };
+
+  const handleInsertInputChange = event => {
+    const { name, value } = event.target;
+    setInsertOutlet({ ...insertOutlet, [name]: value});
+  }
+
+  const handleClickEditOpen = (outlet) => {
+    setEditOutlet(outlet);
+    setEdit(true);
+  };
+
+  const handleEditClose = () => {
+    setEdit(false);
+    updateOutlet(editOutlet._id, editOutlet);
+  };
+
+  const handleEditCancel = () => {
+    setEdit(false);
+  };
+
+  const handleEditInputChange = event => {
+    const { name, value } = event.target;
+    setEditOutlet({ ...editOutlet, [name]: value });
+  }
+
+
   return (
     <>
-      <PageTitle title="Tables" />
+      <PageTitle title="Outlets" />
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <MUIDataTable
-            title="Employee List"
-            data={datatableData}
-            columns={["Name", "Company", "City", "State"]}
-            options={{
-              filterType: "checkbox",
-            }}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Widget title="Material-UI Table" upperTitle noBodyPadding>
-            <Table data={mock.table} />
-          </Widget>
+          <InsertWidget title="" upperTitle noBodyPadding insertNew={handleClickInsertOpen}>
+            <Table className="mb-0">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Outlet Name</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>Employee</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {outlets.length > 0 ? (
+                  outlets.map((outlet) => (
+                    <TableRow key={outlet._id}>
+                      <TableCell className="pl-3 fw-normal">{outlet.name}</TableCell>
+                      <TableCell>{outlet.address}</TableCell>
+                      <TableCell>{outlet.employee}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          color="primary"
+                          // classes={{ root: classes.moreButton }}
+                          aria-owns="widget-menu"
+                          aria-haspopup="true"
+                          onClick={() => { handleClickEditOpen(outlet) }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          color="primary"
+                          // classes={{ root: classes.moreButton }}
+                          aria-owns="widget-menu"
+                          aria-haspopup="true"
+                          onClick={() => {
+                            deleteOutlet(outlet._id)
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                    <tr>
+                      <td colSpan={5}>No users</td>
+                    </tr>
+                  )}
+              </TableBody>
+            </Table>
+
+          </InsertWidget>
         </Grid>
       </Grid>
+
+      {/* Insert Dialog */}
+      <Dialog open={insert} onClose={handleInsertClose} aria-labelledby="form-dialog-title" disableBackdropClick>
+        <DialogTitle id="form-dialog-title">Insert New Outlet</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            variant="standard"
+            id="name"
+            name="name"
+            label="Name"
+            fullWidth
+            onChange={handleInsertInputChange}
+          />
+          <TextField
+            variant="standard"
+            id="address"
+            name="address"
+            label="Address"
+            fullWidth
+            onChange={handleInsertInputChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleInsertCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleInsertClose} color="primary">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={edit} onClose={handleEditClose} aria-labelledby="form-dialog-title" disableBackdropClick>
+        <DialogTitle id="form-dialog-title">Edit Outlet {editOutlet._id}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            variant="standard"
+            id="name"
+            name="name"
+            label="Name"
+            defaultValue={editOutlet.name}
+            fullWidth
+            onChange={handleEditInputChange}
+          />
+          <TextField
+            variant="standard"
+            id="address"
+            name="address"
+            label="Address"
+            defaultValue={editOutlet.address}
+            fullWidth
+            onChange={handleEditInputChange}
+          />
+          <TextField
+            variant="standard"
+            id="employee"
+            name="employee"
+            label="Employee"
+            defaultValue={editOutlet.employee}
+            fullWidth
+            onChange={handleEditInputChange}
+            disabled
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditClose} color="primary">
+            Edit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
+
+export default Outlet;

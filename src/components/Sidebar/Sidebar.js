@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Drawer, IconButton, List } from "@material-ui/core";
 import {
   Home as HomeIcon,
-  NotificationsNone as ProductIcon,
-  FormatSize as SalesIcon,
-  FilterNone as InventoryIcon,
+  Fastfood as ProductIcon,
+  AttachMoney as SalesIcon,
+  LocalGroceryStore as InventoryIcon,
   BorderAll as TableIcon,
-  QuestionAnswer as OutletIcon,
-  LibraryBooks as EmployeeIcon,
+  Store as OutletIcon,
+  PeopleAlt as EmployeeIcon,
   ArrowBack as ArrowBackIcon,
 } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
@@ -58,8 +58,7 @@ const structure = [
     label: "Employee",
     link: "/app/employee",
     icon: <EmployeeIcon />,
-  },
-  { id: 6, label: "Tables", link: "/app/tables", icon: <TableIcon /> }
+  }
 ];
 
 function Sidebar({ location }) {
