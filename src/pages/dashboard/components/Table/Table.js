@@ -7,15 +7,6 @@ import {
   TableCell,
 } from "@material-ui/core";
 
-// components
-import { Button } from "../../../../components/Wrappers";
-
-const states = {
-  sent: "success",
-  pending: "warning",
-  declined: "secondary",
-};
-
 const TableComponent = ({ data }) => {
   data = data.filter(inventory => inventory.alertCount >= inventory.totalQualtity)
   return (

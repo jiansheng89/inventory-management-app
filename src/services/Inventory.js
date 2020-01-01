@@ -10,7 +10,6 @@ export default {
   single: (id) =>
     api.get(`/inventory/${id}`),
   create: (params) => {
-    // console.log(params)
     return api.post('/inventory', params, options)
   },
   update: (id, params) =>

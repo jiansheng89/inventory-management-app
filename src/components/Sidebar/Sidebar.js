@@ -5,7 +5,6 @@ import {
   Fastfood as ProductIcon,
   AttachMoney as SalesIcon,
   LocalGroceryStore as InventoryIcon,
-  BorderAll as TableIcon,
   Store as OutletIcon,
   PeopleAlt as EmployeeIcon,
   ArrowBack as ArrowBackIcon,
@@ -61,7 +60,7 @@ const structure = [
   }
 ];
 
-function Sidebar({ location }) {
+const Sidebar = ({ location }) => {
   var classes = useStyles();
   var theme = useTheme();
 

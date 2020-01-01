@@ -24,7 +24,7 @@ import Employee from "../../pages/employee";
 // context
 import { useLayoutState } from "../../context/LayoutContext";
 
-function Layout(props) {
+const Layout = (props) => {
   var classes = useStyles();
 
   // global

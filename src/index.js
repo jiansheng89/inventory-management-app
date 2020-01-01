@@ -18,11 +18,6 @@ import Themes from "./themes";
 import { LayoutProvider } from "./context/LayoutContext";
 
 
-
-// const DO_NOT_LOGIN = false;
-console.log("env variable")
-console.log(process.env)
-
 runWithAdal(authContext, () => {
 
     ReactDOM.render(

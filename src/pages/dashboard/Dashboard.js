@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Grid,
 } from "@material-ui/core";
-import { useTheme } from "@material-ui/styles";
 
 // styles
 import useStyles from "./styles";
@@ -24,7 +23,6 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await DashboardService.info();
-      console.log(result)
       setDashboard(result.data);
     };
 

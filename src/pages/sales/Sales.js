@@ -110,9 +110,7 @@ const Sales = () => {
       }
     }
     setSalesProductValue(tempSalesProductValue);
-    console.log(value)
     insertSale.salesItem = value;
-    // setInsertProduct({ ...insertProduct, 'recipe': value });
     setInsertSale(insertSale);
   }
 
@@ -153,9 +151,7 @@ const Sales = () => {
       }
     }
     setSalesProductValue(tempSalesProductValue);
-    console.log(value)
     editSale.salesItem = value;
-    // setInsertProduct({ ...insertProduct, 'recipe': value });
     setEditSale(editSale);
   }
 

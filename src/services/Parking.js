@@ -10,7 +10,6 @@ export default {
   single: (id) =>
     api.get(`/parking/${id}`),
   create: (params) => {
-    console.log(params)
     api.post('/parking', params, options)
   },
   update: (id, params) =>

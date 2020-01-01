@@ -40,7 +40,6 @@ const Employee = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await EmployeeService.retrieveAll();
-      console.log(result)
       setEmployee(result.data);
     };
 
@@ -51,7 +50,6 @@ const Employee = () => {
   // CRUDfunctions
   const addEmployee = async Employee => {
     let result = await EmployeeService.create(Employee);
-    console.log(result)
     setEmployee([...Employees, result.data]); //to include _id
   }
 

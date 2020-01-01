@@ -7,7 +7,7 @@ import useStyles from "./styles";
 // components
 import { Typography } from "../Wrappers";
 
-export default function UserAvatar({ color = "primary", ...props }) {
+const UserAvatar = ({ color = "primary", ...props }) => {
   var classes = useStyles();
   var theme = useTheme();
 
@@ -25,3 +25,5 @@ export default function UserAvatar({ color = "primary", ...props }) {
     </div>
   );
 }
+
+export default UserAvatar;

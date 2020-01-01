@@ -17,7 +17,7 @@ var useStyles = makeStyles(theme => ({
   },
 }));
 
-function Badge({ children, colorBrightness, color, ...props }) {
+const Badge = ({ children, colorBrightness, color, ...props }) => {
   var classes = useStyles();
   var theme = useTheme();
   var Styled = createStyled({
@@ -179,3 +179,5 @@ function createStyled(styles, options) {
 
   return withStyles(styles, options)(Styled);
 }
+
+export default Badge;

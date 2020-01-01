@@ -16,8 +16,6 @@ import {
   DialogContent,
   DialogTitle,
   Select,
-  Input,
-  MenuItem
 } from "@material-ui/core";
 
 import {
@@ -46,7 +44,6 @@ const Product = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await ProductService.retrieveAll();
-      console.log(result)
       setProduct(result.data);
 
       const inventoriesServiceResult = await InventoryService.retrieveAll();
@@ -60,7 +57,6 @@ const Product = () => {
   // CRUDfunctions
   const addProduct = async product => {
     let result = await ProductService.create(product);
-    console.log(result)
     setProduct([...products, result.data]); //to include _id
   }
 
@@ -114,18 +110,15 @@ const Product = () => {
       }
     }
     setRecipeValue(tempRecipeValue);
-    console.log(value)
     insertProduct.recipe = value;
     // setInsertProduct({ ...insertProduct, 'recipe': value });
     setInsertProduct(insertProduct);
   }
 
   const handleClickEditOpen = (product) => {
-    console.log(product)
     let editRecipe = product.recipe;
     // product.recipeValue = ;
     setRecipeValue(editRecipe.map(value => value._id));
-    // console.log(product)
     setEditProduct(product);
     setEdit(true);
   };
@@ -145,10 +138,6 @@ const Product = () => {
   }
 
   const handleEditSelectChange = event => {
-    console.log(event)
-    console.log(event.target.value)
-    // const { name, value } = event.target;
-    // setInsertProduct({ ...insertProduct, [name]: value });
     const { options } = event.target;
     const value = [];
     const tempRecipeValue = [];
@@ -167,9 +156,7 @@ const Product = () => {
       }
     }
     setRecipeValue(tempRecipeValue);
-    console.log(value)
     editProduct.recipe = value;
-    // setInsertProduct({ ...insertProduct, 'recipe': value });
     setEditProduct(editProduct);
   }
 

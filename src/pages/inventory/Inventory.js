@@ -40,7 +40,6 @@ const Inventory = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await InventoryService.retrieveAll();
-      // console.log(result)
       setInventories(result.data);
     };
 

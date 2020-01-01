@@ -40,7 +40,6 @@ const Outlet = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await OutletService.retrieveAll();
-      console.log(result)
       setOutlet(result.data);
     };
 
@@ -51,7 +50,6 @@ const Outlet = () => {
   // CRUDfunctions
   const addOutlet = async outlet => {
     let result = await OutletService.create(outlet);
-    console.log(result)
     setOutlet([...outlets, result.data]); //to include _id
   }
 
