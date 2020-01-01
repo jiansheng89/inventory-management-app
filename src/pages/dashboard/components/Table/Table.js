@@ -17,7 +17,7 @@ const states = {
 };
 
 const TableComponent = ({ data }) => {
-  var data = data.filter(inventory => inventory.alertCount >= inventory.totalQualtity)
+  data = data.filter(inventory => inventory.alertCount >= inventory.totalQualtity)
   return (
     <Table className="mb-0">
       <TableHead>
