@@ -119,7 +119,6 @@ const Employee = () => {
                   <TableCell>Employee Name</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Phone Number</TableCell>
-                  <TableCell>Outlet</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -130,7 +129,6 @@ const Employee = () => {
                       <TableCell className="pl-3 fw-normal">{Employee.name}</TableCell>
                       <TableCell>{Employee.email}</TableCell>
                       <TableCell>{Employee.phoneNumber}</TableCell>
-                      <TableCell>{Employee.outlet}</TableCell>
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -157,7 +155,7 @@ const Employee = () => {
                   ))
                 ) : (
                     <tr>
-                      <td colSpan={5}>No users</td>
+                      <td colSpan={5}>No Employee</td>
                     </tr>
                   )}
               </TableBody>
@@ -198,7 +196,7 @@ const Employee = () => {
             fullWidth
             onChange={handleInsertInputChange}
           />
-          <TextField
+          {/* <TextField
             variant="standard"
             id="outlet"
             name="outlet"
@@ -206,7 +204,7 @@ const Employee = () => {
             fullWidth
             onChange={handleInsertInputChange}
             disabled
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleInsertCancel} color="primary">
@@ -252,7 +250,7 @@ const Employee = () => {
             fullWidth
             onChange={handleEditInputChange}
           />
-          <TextField
+          {/* <TextField
             variant="standard"
             id="outlet"
             name="outlet"
@@ -261,7 +259,7 @@ const Employee = () => {
             fullWidth
             onChange={handleEditInputChange}
             disabled
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditCancel} color="primary">

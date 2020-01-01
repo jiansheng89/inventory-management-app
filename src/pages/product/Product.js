@@ -245,7 +245,7 @@ const Product = () => {
                   ))
                 ) : (
                     <tr>
-                      <td colSpan={5}>No users</td>
+                      <td colSpan={5}>No Product</td>
                     </tr>
                   )}
               </TableBody>

@@ -117,7 +117,6 @@ const Outlet = () => {
                 <TableRow>
                   <TableCell>Outlet Name</TableCell>
                   <TableCell>Address</TableCell>
-                  <TableCell>Employee</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -127,7 +126,6 @@ const Outlet = () => {
                     <TableRow key={outlet._id}>
                       <TableCell className="pl-3 fw-normal">{outlet.name}</TableCell>
                       <TableCell>{outlet.address}</TableCell>
-                      <TableCell>{outlet.employee}</TableCell>
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -154,7 +152,7 @@ const Outlet = () => {
                   ))
                 ) : (
                     <tr>
-                      <td colSpan={5}>No users</td>
+                      <td colSpan={5}>No Outlet</td>
                     </tr>
                   )}
               </TableBody>
@@ -218,16 +216,6 @@ const Outlet = () => {
             defaultValue={editOutlet.address}
             fullWidth
             onChange={handleEditInputChange}
-          />
-          <TextField
-            variant="standard"
-            id="employee"
-            name="employee"
-            label="Employee"
-            defaultValue={editOutlet.employee}
-            fullWidth
-            onChange={handleEditInputChange}
-            disabled
           />
         </DialogContent>
         <DialogActions>

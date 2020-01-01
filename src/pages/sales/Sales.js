@@ -243,7 +243,7 @@ const Sales = () => {
                   ))
                 ) : (
                     <tr>
-                      <td colSpan={5}>No users</td>
+                      <td colSpan={5}>No Sales</td>
                     </tr>
                   )}
               </TableBody>

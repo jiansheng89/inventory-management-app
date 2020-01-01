@@ -155,7 +155,7 @@ const Inventory = () => {
                   ))
                 ) : (
                     <tr>
-                      <td colSpan={8}>No users</td>
+                      <td colSpan={8}>No Inventory</td>
                     </tr>
                   )}
               </TableBody>
