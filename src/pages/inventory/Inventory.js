@@ -117,9 +117,7 @@ const Inventory = () => {
                   <TableCell>Name</TableCell>
                   <TableCell>Cost</TableCell>
                   <TableCell>Total Quantity</TableCell>
-                  <TableCell>Quantity</TableCell>
                   <TableCell>Alert Count</TableCell>
-                  <TableCell>Related Product</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -130,9 +128,7 @@ const Inventory = () => {
                       <TableCell className="pl-3 fw-normal">{inventory.name}</TableCell>
                       <TableCell>{inventory.cost}</TableCell>
                       <TableCell>{inventory.totalQualtity}</TableCell>
-                      <TableCell>{inventory.quantity}</TableCell>
                       <TableCell>{inventory.alertCount}</TableCell>
-                      <TableCell>{inventory.relatedProduct}</TableCell>
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -178,7 +174,7 @@ const Inventory = () => {
             variant="standard"
             id="name"
             name="name"
-            label="Name"
+            label="Inventory Name"
             fullWidth
             onChange={handleInsertInputChange}
           />
@@ -202,30 +198,12 @@ const Inventory = () => {
           />
           <TextField
             variant="standard"
-            id="quantity"
-            name="quantity"
-            label="Quantity"
-            fullWidth
-            onChange={handleInsertInputChange}
-            disabled
-          />
-          <TextField
-            variant="standard"
             id="alertCount"
             name="alertCount"
             label="Alert Count"
             type="number"
             fullWidth
             onChange={handleInsertInputChange}
-          />
-          <TextField
-            variant="standard"
-            id="relatedProduct"
-            name="relatedProduct"
-            label="Related Product"
-            fullWidth
-            onChange={handleInsertInputChange}
-            disabled
           />
         </DialogContent>
         <DialogActions>
@@ -274,16 +252,6 @@ const Inventory = () => {
           />
           <TextField
             variant="standard"
-            id="quantity"
-            name="quantity"
-            label="Quantity"
-            defaultValue={editInventory.quantity}
-            fullWidth
-            onChange={handleEditInputChange}
-            disabled
-          />
-          <TextField
-            variant="standard"
             id="alertCount"
             name="alertCount"
             label="Alert Count"
@@ -291,16 +259,6 @@ const Inventory = () => {
             defaultValue={editInventory.alertCount}
             fullWidth
             onChange={handleEditInputChange}
-          />
-          <TextField
-            variant="standard"
-            id="relatedProduct"
-            name="relatedProduct"
-            label="Related Product"
-            defaultValue={editInventory.relatedProduct}
-            fullWidth
-            onChange={handleEditInputChange}
-            disabled
           />
         </DialogContent>
         <DialogActions>

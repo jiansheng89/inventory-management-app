@@ -11,7 +11,7 @@ export default {
     api.get(`/sales/${id}`),
   create: (params) => {
     console.log(params)
-    api.post('/sales', params, options)
+    return api.post('/sales', params, options)
   },
   update: (id, params) =>
     api.put(`/sales/${id}`, params),

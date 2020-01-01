@@ -15,6 +15,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Select,
+  Input,
+  MenuItem
 } from "@material-ui/core";
 
 import {
@@ -26,15 +29,18 @@ import {
 import { Button } from "../../components/Wrappers";
 
 import ProductService from '../../services/Product'
+import InventoryService from '../../services/Inventory'
 
 const Product = () => {
   //state
   const productData = [];
   const [products, setProduct] = useState(productData);
+  const [inventories, setInventories] = useState([]);
   const [insert, setInsert] = useState(false);
-  const [insertProduct, setInsertProduct] = useState({});
+  const [insertProduct, setInsertProduct] = useState({ recipe: [] });
   const [edit, setEdit] = useState(false);
-  const [editProduct, setEditProduct] = useState({});
+  const [editProduct, setEditProduct] = useState({ recipe: [] });
+  const [recipeValue, setRecipeValue] = useState({ recipe: [] });
 
   //Initialized
   useEffect(() => {
@@ -42,6 +48,9 @@ const Product = () => {
       const result = await ProductService.retrieveAll();
       console.log(result)
       setProduct(result.data);
+
+      const inventoriesServiceResult = await InventoryService.retrieveAll();
+      setInventories(inventoriesServiceResult.data);
     };
 
     fetchData();
@@ -83,10 +92,40 @@ const Product = () => {
 
   const handleInsertInputChange = event => {
     const { name, value } = event.target;
-    setInsertProduct({ ...insertProduct, [name]: value});
+    setInsertProduct({ ...insertProduct, [name]: value });
+  }
+
+  const handleInsertSelectChange = event => {
+    const { options } = event.target;
+    const value = [];
+    const tempRecipeValue = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        let selectdInventory = inventories.filter(inventory => inventory._id === options[i].value)[0];
+        delete selectdInventory.cost;
+        delete selectdInventory.totalQualtity;
+        delete selectdInventory.alertCount;
+        delete selectdInventory.quantity;
+        delete selectdInventory.relatedProduct;
+        delete selectdInventory.__v;
+        selectdInventory.amount = 1;
+        value.push(inventories.filter(inventory => inventory._id === options[i].value)[0]);
+        tempRecipeValue.push(options[i].value);
+      }
+    }
+    setRecipeValue(tempRecipeValue);
+    console.log(value)
+    insertProduct.recipe = value;
+    // setInsertProduct({ ...insertProduct, 'recipe': value });
+    setInsertProduct(insertProduct);
   }
 
   const handleClickEditOpen = (product) => {
+    console.log(product)
+    let editRecipe = product.recipe;
+    // product.recipeValue = ;
+    setRecipeValue(editRecipe.map(value => value._id));
+    // console.log(product)
     setEditProduct(product);
     setEdit(true);
   };
@@ -105,6 +144,35 @@ const Product = () => {
     setEditProduct({ ...editProduct, [name]: value });
   }
 
+  const handleEditSelectChange = event => {
+    console.log(event)
+    console.log(event.target.value)
+    // const { name, value } = event.target;
+    // setInsertProduct({ ...insertProduct, [name]: value });
+    const { options } = event.target;
+    const value = [];
+    const tempRecipeValue = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        let selectdInventory = inventories.filter(inventory => inventory._id === options[i].value)[0];
+        delete selectdInventory.cost;
+        delete selectdInventory.totalQualtity;
+        delete selectdInventory.alertCount;
+        delete selectdInventory.quantity;
+        delete selectdInventory.relatedProduct;
+        delete selectdInventory.__v;
+        selectdInventory.amount = 1;
+        value.push(inventories.filter(inventory => inventory._id === options[i].value)[0]);
+        tempRecipeValue.push(options[i].value);
+      }
+    }
+    setRecipeValue(tempRecipeValue);
+    console.log(value)
+    editProduct.recipe = value;
+    // setInsertProduct({ ...insertProduct, 'recipe': value });
+    setEditProduct(editProduct);
+  }
+
 
   return (
     <>
@@ -115,7 +183,6 @@ const Product = () => {
             <Table className="mb-0">
               <TableHead>
                 <TableRow>
-                  <TableCell>ID</TableCell>
                   <TableCell>Product Name</TableCell>
                   <TableCell>Price</TableCell>
                   <TableCell>Recipe</TableCell>
@@ -126,10 +193,32 @@ const Product = () => {
                 {products.length > 0 ? (
                   products.map((product) => (
                     <TableRow key={product._id}>
-                      <TableCell>{product._id}</TableCell>
                       <TableCell className="pl-3 fw-normal">{product.name}</TableCell>
                       <TableCell>{product.price}</TableCell>
-                      <TableCell>{product.recipe}</TableCell>
+                      <TableCell>
+                        <Table className="mb-0">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Inventory Name</TableCell>
+                              <TableCell>Amount</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {product.recipe.length > 0 ? (
+                              product.recipe.map((inventory) => (
+                                <TableRow>
+                                  <TableCell>{inventory.name}</TableCell>
+                                  <TableCell>{inventory.amount}</TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
+                                <tr>
+                                  <td colSpan={2}>No Inventory</td>
+                                </tr>
+                              )}
+                          </TableBody>
+                        </Table>
+                      </TableCell>
                       <TableCell>
                         <IconButton
                           color="primary"
@@ -188,7 +277,7 @@ const Product = () => {
             fullWidth
             onChange={handleInsertInputChange}
           />
-          <TextField
+          {/* <TextField
             variant="standard"
             id="recipe"
             name="recipe"
@@ -196,7 +285,24 @@ const Product = () => {
             fullWidth
             onChange={handleInsertInputChange}
             disabled
-          />
+          /> */}
+          <h3>Ingredient</h3>
+          <Select
+            fullWidth
+            multiple
+            native
+            value={recipeValue}
+            onChange={handleInsertSelectChange}
+            inputProps={{
+              id: 'select-multiple-native',
+            }}
+          >
+            {inventories.map(inventory => (
+              <option key={inventory._id} value={inventory._id}>
+                {inventory.name}
+              </option>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleInsertCancel} color="primary">
@@ -232,16 +338,23 @@ const Product = () => {
             fullWidth
             onChange={handleEditInputChange}
           />
-          <TextField
-            variant="standard"
-            id="recipe"
-            name="recipe"
-            label="Recipe"
-            defaultValue={editProduct.recipe}
+          <h3>Ingredient</h3>
+          <Select
             fullWidth
-            onChange={handleEditInputChange}
-            disabled
-          />
+            multiple
+            native
+            value={recipeValue}
+            onChange={handleEditSelectChange}
+            inputProps={{
+              id: 'select-multiple-native',
+            }}
+          >
+            {inventories.map(inventory => (
+              <option key={inventory._id} value={inventory._id}>
+                {inventory.name}
+              </option>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditCancel} color="primary">

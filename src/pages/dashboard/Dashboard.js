@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
 } from "@material-ui/core";
@@ -8,15 +8,29 @@ import { useTheme } from "@material-ui/styles";
 import useStyles from "./styles";
 
 // components
-import mock from "./mock";
 import Widget from "../../components/Widget";
 import PageTitle from "../../components/PageTitle";
 import { Typography } from "../../components/Wrappers";
 import Table from "./components/Table/Table";
 
+import DashboardService from '../../services/Dashboard'
 
-export default function Dashboard() {
+
+const Dashboard = () => {
   var classes = useStyles();
+
+  const [dashboard, setDashboard] = useState({inventory:[]});
+  //Initialized
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await DashboardService.info();
+      console.log(result)
+      setDashboard(result.data);
+    };
+
+    fetchData();
+  }, []);
+
 
   return (
     <>
@@ -31,7 +45,7 @@ export default function Dashboard() {
           >
             <div className={classes.visitsNumberContainer}>
               <Typography size="xl" weight="medium">
-                12, 678
+                {dashboard.sales}
               </Typography>
             </div>
             <Grid
@@ -52,7 +66,7 @@ export default function Dashboard() {
           >
             <div className={classes.visitsNumberContainer}>
               <Typography size="xl" weight="medium">
-                12, 678
+                {dashboard.product}
               </Typography>
             </div>
             <Grid
@@ -73,7 +87,7 @@ export default function Dashboard() {
           >
             <div className={classes.visitsNumberContainer}>
               <Typography size="xl" weight="medium">
-                12, 678
+                {dashboard.outlet}
               </Typography>
             </div>
             <Grid
@@ -94,7 +108,7 @@ export default function Dashboard() {
           >
             <div className={classes.visitsNumberContainer}>
               <Typography size="xl" weight="medium">
-                12, 678
+                {dashboard.employee}
               </Typography>
             </div>
             <Grid
@@ -109,15 +123,17 @@ export default function Dashboard() {
 
         <Grid item xs={12}>
           <Widget
-            title="Inventory Lists"
+            title="Low Stock Inventories"
             upperTitle
             noBodyPadding
             bodyClass={classes.tableWidget}
           >
-            <Table data={mock.table} />
+            <Table data={dashboard.inventory} />
           </Widget>
         </Grid>
       </Grid>
     </>
   );
 }
+
+export default Dashboard;

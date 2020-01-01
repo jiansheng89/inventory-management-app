@@ -15,6 +15,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Select,
 } from "@material-ui/core";
 
 import {
@@ -26,6 +27,7 @@ import {
 import { Button } from "../../components/Wrappers";
 
 import SalesService from '../../services/Sales'
+import ProductService from '../../services/Product'
 
 const Sales = () => {
   //state
@@ -35,12 +37,17 @@ const Sales = () => {
   const [insertSale, setInsertSale] = useState({});
   const [edit, setEdit] = useState(false);
   const [editSale, setEditSale] = useState({});
+  const [products, setProduct] = useState([]);
+  const [salesProductValue, setSalesProductValue] = useState([]);
 
   //Initialized
   useEffect(() => {
     const fetchData = async () => {
       const result = await SalesService.retrieveAll();
       setSales(result.data);
+
+      const productServiceResult = await ProductService.retrieveAll();
+      setProduct(productServiceResult.data);
     };
 
     fetchData();
@@ -49,8 +56,9 @@ const Sales = () => {
 
   // CRUDfunctions
   const addSale = async sale => {
-    setSales([...sales, sale]);
-    await SalesService.create(sale);
+
+    let result = await SalesService.create(sale);
+    setSales([...sales, result.data]);
   }
 
   const deleteSales = async id => {
@@ -85,6 +93,30 @@ const Sales = () => {
     setInsertSale({ ...insertSale, [name]: value, salesDate: now.toISOString() });
   }
 
+
+  const handleInsertSelectChange = event => {
+    const { options } = event.target;
+    const value = [];
+    const tempSalesProductValue = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        let selectedSalesProduct = products.filter(product => product._id === options[i].value)[0];
+        delete selectedSalesProduct.price;
+        delete selectedSalesProduct.recipe;
+        delete selectedSalesProduct.__v;
+        selectedSalesProduct.amount = 1;
+        value.push(products.filter(product => product._id === options[i].value)[0]);
+        tempSalesProductValue.push(options[i].value);
+      }
+    }
+    setSalesProductValue(tempSalesProductValue);
+    console.log(value)
+    insertSale.salesItem = value;
+    // setInsertProduct({ ...insertProduct, 'recipe': value });
+    setInsertSale(insertSale);
+  }
+
+
   const handleClickEditOpen = (sale) => {
     setEditSale(sale);
     setEdit(true);
@@ -103,6 +135,28 @@ const Sales = () => {
     let now = new Date();
     const { name, value } = event.target;
     setEditSale({ ...editSale, [name]: value, salesDate: now.toISOString() });
+  }
+
+  const handleEditSelectChange = event => {
+    const { options } = event.target;
+    const value = [];
+    const tempSalesProductValue = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        let selectedSalesProduct = products.filter(product => product._id === options[i].value)[0];
+        delete selectedSalesProduct.price;
+        delete selectedSalesProduct.recipe;
+        delete selectedSalesProduct.__v;
+        selectedSalesProduct.amount = 1;
+        value.push(products.filter(product => product._id === options[i].value)[0]);
+        tempSalesProductValue.push(options[i].value);
+      }
+    }
+    setSalesProductValue(tempSalesProductValue);
+    console.log(value)
+    editSale.salesItem = value;
+    // setInsertProduct({ ...insertProduct, 'recipe': value });
+    setEditSale(editSale);
   }
 
 
@@ -128,7 +182,30 @@ const Sales = () => {
                     <TableRow key={sale._id}>
                       <TableCell>{sale.salesId}</TableCell>
                       <TableCell className="pl-3 fw-normal">{sale.totalSales}</TableCell>
-                      <TableCell>{sale.salesItem}</TableCell>
+                      <TableCell>
+                        <Table className="mb-0">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Product Name</TableCell>
+                              <TableCell>Amount</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {sale.salesItem.length > 0 ? (
+                              sale.salesItem.map((singleSalesItem) => (
+                                <TableRow>
+                                  <TableCell>{singleSalesItem.name}</TableCell>
+                                  <TableCell>{singleSalesItem.amount}</TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
+                                <tr>
+                                  <td colSpan={2}>No Product</td>
+                                </tr>
+                              )}
+                          </TableBody>
+                        </Table>
+                      </TableCell>
                       <TableCell>{sale.salesDate}</TableCell>
                       <TableCell>
                         <IconButton
@@ -196,26 +273,24 @@ const Sales = () => {
             fullWidth
             onChange={handleInsertInputChange}
           />
-          <TextField
-            autoFocus
-            variant="standard"
-            id="salesItem"
-            name="salesItem"
+          <h3>Sales Item</h3>
+          <Select
+            fullWidth
+            multiple
+            native
+            value={salesProductValue}
             label="Sales Item"
-            fullWidth
-            onChange={handleInsertInputChange}
-            disabled
-          />
-          <TextField
-            autoFocus
-            variant="standard"
-            id="salesDate"
-            name="salesDate"
-            label="Sales Date"
-            fullWidth
-            onChange={handleInsertInputChange}
-            disabled
-          />
+            onChange={handleInsertSelectChange}
+            inputProps={{
+              id: 'select-multiple-native',
+            }}
+          >
+            {products.map(product => (
+              <option key={product._id} value={product._id}>
+                {product.name}
+              </option>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleInsertCancel} color="primary">
@@ -250,27 +325,24 @@ const Sales = () => {
             fullWidth
             onChange={handleEditInputChange}
           />
-          <TextField
-            autoFocus
-            variant="standard"
-            id="salesItem"
-            name="salesItem"
+          <h3>Sales Item</h3>
+          <Select
+            fullWidth
+            multiple
+            native
+            value={salesProductValue}
             label="Sales Item"
-            fullWidth
-            onChange={handleEditInputChange}
-            disabled
-          />
-          <TextField
-            autoFocus
-            variant="standard"
-            id="salesDate"
-            name="salesDate"
-            label="Sales Date"
-            defaultValue={editSale.salesDate}
-            fullWidth
-            onChange={handleEditInputChange}
-            disabled
-          />
+            onChange={handleEditSelectChange}
+            inputProps={{
+              id: 'select-multiple-native',
+            }}
+          >
+            {products.map(product => (
+              <option key={product._id} value={product._id}>
+                {product.name}
+              </option>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditCancel} color="primary">
